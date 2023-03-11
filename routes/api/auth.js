@@ -50,6 +50,7 @@ router.post("/login", async (req, res) => {
       throw "invalid password";
     }
     const token = await genToken({
+      name: user.name,
       email: user.email,
       id: user._id,
       isAdmin: user.isAdmin,
@@ -156,5 +157,21 @@ router.delete("/", authMiddleware, adminOnlyMiddleware, async (req, res) => {
     console.log(error);
   }
 });
+
+router.get("/userInfo", authMiddleware, async (req, res) => {
+  try {
+    // let user = req.user;
+    console.log(req.userData);
+    res.json(req.userData);
+  } catch (error) {
+    res.status(500).send(errorsFromMongoose);
+  }
+});
+// let user = req.user;
+
+// User.findById(user._id)
+//   .select(["-password", "-createdAt", "-__v"])
+//   .then((user) => res.send(user))
+//   .catch((errorsFromMongoose) => res.status(500).send(errorsFromMongoose));
 
 module.exports = router;
